@@ -1,3 +1,6 @@
+let playerScore = 0;
+let computerScore = 0;
+
 /*Get computer choice*/
 function getComputerChoice() {
     const playPossible = ["rock", "paper", "scissors"];
@@ -64,52 +67,64 @@ function play(playerSelection, computerSelection) {
     let result;
 
     if(winner === "player") {
-        result = "You win! " + playerSelection + " beats " + computerSelection; 
+        result = "You win! " + captitalizeFirstLetter(playerSelection) + " beats " + computerSelection; 
     }
 
     else if(winner === "computer") {
-        result = "You lose! " + computerSelection + " beats " + playerSelection; 
+        result = "You lose! " + captitalizeFirstLetter(computerSelection) + " beats " + playerSelection; 
     }
 
     else {
         result = "Nobody wins! You both played " + computerSelection;
     }
 
-    return result;
-
+    return result + ".";
 
 }
 
-/*Play 5 rounds*/
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
+function captitalizeFirstLetter(word) {
+    
+    let wordCapitalized = word.toLowerCase()
+    wordCapitalized = wordCapitalized.charAt(0).toUpperCase() + wordCapitalized.slice(1);
+    return wordCapitalized;
+}
 
-    for(let i = 0; i < 5; i++) {
+function playGame(event) {  
+    const resultText = document.querySelector('.result');
+    const result = play(event.target.className, getComputerChoice());
 
-        const result = play(getPlayerChoice(), getComputerChoice());
-        console.log(result);
-
-        if(result.includes("win")) {
-            playerScore++;
-        }
-
-        else if(result.includes("lose")) {
-            computerScore++;
-        }
+    if(result.includes("win")) {
+        playerScore++;
     }
 
-    if(playerScore > computerScore) {
-        console.log("You win the 5 round game! Congratulations! :))");
+    else if(result.includes("lose")) {
+        computerScore++;
     }
 
-    else if(playerScore < computerScore) {
-        console.log("You lose the 5 round game! :(");
+    if(playerScore < 5 && computerScore < 5) {
+        resultText.textContent = result;
     }
 
     else {
-        console.log("Nobody wins... try again!");
+        let finalResult = "(" + playerScore + " - " + computerScore;
+
+        if(playerScore > computerScore) {
+            finalResult += ") You win the 5 round game! Congratulations! :))";
+        }
+    
+        else if(playerScore < computerScore) {
+            finalResult += ") You lose the 5 round game! :(";
+        }
+
+        resultText.textContent = finalResult
     }
 }
 
-game();
+const rockButton = document.querySelector('.rock');
+rockButton.addEventListener('click', playGame);
+
+const paperButton = document.querySelector('.paper');
+paperButton.addEventListener('click', playGame);
+
+const scissorsButton = document.querySelector('.scissors');
+scissorsButton.addEventListener('click', playGame);
